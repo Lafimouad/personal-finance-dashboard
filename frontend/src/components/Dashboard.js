@@ -1,20 +1,32 @@
 import React, { useEffect, useState } from "react";
+import ExpenseForm from "./ExpenseForm";
+import ExpenseCharts from "./ExpenseCharts";
+import { fetchExpenses, addExpense } from "../api";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/expenses")
-      .then((res) => res.json())
-      .then((data) => setExpenses(data));
+    fetchExpenses().then(setExpenses).catch(console.error);
   }, []);
+
+  const handleAddExpense = (expense) => {
+    addExpense(expense)
+      .then((newExpense) => setExpenses((prev) => [...prev, newExpense]))
+      .catch(console.error);
+  };
 
   return (
     <div>
+      <h2>Add Expense</h2>
+      <ExpenseForm onAdd={handleAddExpense} />
+      <ExpenseCharts expenses={expenses} />
       <h2>Expenses</h2>
       <ul>
         {expenses.map((e) => (
-          <li key={e.id}>{e.category}: ${e.amount}</li>
+          <li key={e.id}>
+            <strong>{e.category}</strong>: ${e.amount} - {e.description}
+          </li>
         ))}
       </ul>
     </div>
