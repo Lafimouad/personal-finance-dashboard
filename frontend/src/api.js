@@ -27,3 +27,13 @@ export async function addExpense(expense) {
   if (!res.ok) throw new Error("Failed to add expense");
   return res.json();
 }
+
+export async function editExpense(id, expense) {
+  const res = await fetch(`${API_URL}/${id}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(expense),
+  });
+  if (!res.ok) throw new Error("Failed to edit expense");
+  return res.json();
+}

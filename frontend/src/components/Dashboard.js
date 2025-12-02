@@ -4,9 +4,12 @@ import { useAuth } from "../context/AuthContext";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseCharts from "./ExpenseCharts";
 import { fetchExpenses, addExpense } from "../api";
+import { editExpense } from "../api";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({ amount: "", description: "", category: "" });
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -17,6 +20,30 @@ function Dashboard() {
   const handleAddExpense = (expense) => {
     addExpense(expense)
       .then((newExpense) => setExpenses((prev) => [...prev, newExpense]))
+      .catch(console.error);
+  };
+
+  const startEdit = (expense) => {
+    setEditingId(expense.id);
+    setEditData({ amount: expense.amount, description: expense.description, category: expense.category });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleEditSubmit = (e) => {
+    e.preventDefault();
+    editExpense(editingId, {
+      amount: parseFloat(editData.amount),
+      description: editData.description,
+      category: editData.category,
+    })
+      .then((updated) => {
+        setExpenses((prev) => prev.map((exp) => (exp.id === updated.id ? updated : exp)));
+        setEditingId(null);
+      })
       .catch(console.error);
   };
 
@@ -58,7 +85,43 @@ function Dashboard() {
       <ul>
         {expenses.map((e) => (
           <li key={e.id}>
-            <strong>{e.category}</strong>: ${e.amount} - {e.description}
+            {editingId === e.id ? (
+              <form onSubmit={handleEditSubmit} style={{ display: "inline" }}>
+                <input
+                  type="number"
+                  name="amount"
+                  value={editData.amount}
+                  onChange={handleEditChange}
+                  min="0"
+                  step="0.01"
+                  required
+                  style={{ width: "80px" }}
+                />
+                <input
+                  type="text"
+                  name="description"
+                  value={editData.description}
+                  onChange={handleEditChange}
+                  required
+                  style={{ width: "120px" }}
+                />
+                <input
+                  type="text"
+                  name="category"
+                  value={editData.category}
+                  onChange={handleEditChange}
+                  required
+                  style={{ width: "100px" }}
+                />
+                <button type="submit">Save</button>
+                <button type="button" onClick={() => setEditingId(null)} style={{ marginLeft: "5px" }}>Cancel</button>
+              </form>
+            ) : (
+              <>
+                <strong>{e.category}</strong>: ${e.amount} - {e.description}
+                <button style={{ marginLeft: "10px" }} onClick={() => startEdit(e)}>Edit</button>
+              </>
+            )}
           </li>
         ))}
       </ul>
