@@ -3,16 +3,16 @@
 const API_URL = "http://localhost:8080/api/expenses";
 
 function getAuthHeaders() {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem("token");
   return {
-    'Content-Type': 'application/json',
-    ...(token && { 'Authorization': `Bearer ${token}` })
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
   };
 }
 
 export async function fetchExpenses() {
   const res = await fetch(API_URL, {
-    headers: getAuthHeaders()
+    headers: getAuthHeaders(),
   });
   if (!res.ok) throw new Error("Failed to fetch expenses");
   return res.json();

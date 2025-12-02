@@ -27,17 +27,27 @@ function Dashboard() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "20px",
+        }}
+      >
         <h2>Dashboard</h2>
-        <button onClick={handleLogout} style={{
-          padding: '10px 20px',
-          backgroundColor: '#dc3545',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontWeight: '600'
-        }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#dc3545",
+            color: "white",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+        >
           Logout
         </button>
       </div>
