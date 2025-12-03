@@ -32,4 +32,23 @@ public class ExpenseController {
         expense.setUser(userRepository.findByUsername(username));
         return repository.save(expense);
     }
+
+    @PutMapping("/{id}")
+    public Expense update(@PathVariable Long id, @RequestBody Expense updatedExpense, Authentication authentication) {
+        String username = authentication.getName();
+        Expense expense = repository.findByIdAndUserUsername(id, username)
+                .orElseThrow(() -> new RuntimeException("Expense not found or not authorized"));
+        expense.setCategory(updatedExpense.getCategory());
+        expense.setAmount(updatedExpense.getAmount());
+        expense.setDescription(updatedExpense.getDescription());
+        return repository.save(expense);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id, Authentication authentication) {
+        String username = authentication.getName();
+        Expense expense = repository.findByIdAndUserUsername(id, username)
+                .orElseThrow(() -> new RuntimeException("Expense not found or not authorized"));
+        repository.delete(expense);
+    }
 }
