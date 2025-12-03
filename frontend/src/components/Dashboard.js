@@ -9,7 +9,11 @@ import { editExpense } from "../api";
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
   const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({ amount: "", description: "", category: "" });
+  const [editData, setEditData] = useState({
+    amount: "",
+    description: "",
+    category: "",
+  });
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -25,7 +29,11 @@ function Dashboard() {
 
   const startEdit = (expense) => {
     setEditingId(expense.id);
-    setEditData({ amount: expense.amount, description: expense.description, category: expense.category });
+    setEditData({
+      amount: expense.amount,
+      description: expense.description,
+      category: expense.category,
+    });
   };
 
   const handleEditChange = (e) => {
@@ -41,7 +49,9 @@ function Dashboard() {
       category: editData.category,
     })
       .then((updated) => {
-        setExpenses((prev) => prev.map((exp) => (exp.id === updated.id ? updated : exp)));
+        setExpenses((prev) =>
+          prev.map((exp) => (exp.id === updated.id ? updated : exp))
+        );
         setEditingId(null);
       })
       .catch(console.error);
@@ -114,12 +124,23 @@ function Dashboard() {
                   style={{ width: "100px" }}
                 />
                 <button type="submit">Save</button>
-                <button type="button" onClick={() => setEditingId(null)} style={{ marginLeft: "5px" }}>Cancel</button>
+                <button
+                  type="button"
+                  onClick={() => setEditingId(null)}
+                  style={{ marginLeft: "5px" }}
+                >
+                  Cancel
+                </button>
               </form>
             ) : (
               <>
                 <strong>{e.category}</strong>: ${e.amount} - {e.description}
-                <button style={{ marginLeft: "10px" }} onClick={() => startEdit(e)}>Edit</button>
+                <button
+                  style={{ marginLeft: "10px" }}
+                  onClick={() => startEdit(e)}
+                >
+                  Edit
+                </button>
               </>
             )}
           </li>
