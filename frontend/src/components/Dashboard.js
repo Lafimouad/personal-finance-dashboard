@@ -5,13 +5,18 @@ import ExpenseForm from "./ExpenseForm";
 import ExpenseCharts from "./ExpenseCharts";
 import { fetchExpenses, addExpense, editExpense, deleteExpense } from "../api";
 
-const handleDelete = (id) => {
-  if (window.confirm("Are you sure you want to delete this expense?")) {
-    deleteExpense(id)
-      .then(() => setExpenses((prev) => prev.filter((exp) => exp.id !== id)))
-      .catch(console.error);
-  }
-};
+
+function Dashboard() {
+  const [expenses, setExpenses] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({
+    amount: "",
+    description: "",
+    category: "",
+  });
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -167,6 +172,7 @@ function Dashboard() {
           </li>
         ))}
       </ul>
+
     </div>
   );
 }
