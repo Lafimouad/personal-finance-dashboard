@@ -3,20 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseCharts from "./ExpenseCharts";
-import { fetchExpenses, addExpense, editExpense, deleteExpense } from "../api";
-
-
-function Dashboard() {
-  const [expenses, setExpenses] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [editData, setEditData] = useState({
-    amount: "",
-    description: "",
-    category: "",
-  });
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-
+import { fetchExpenses, addExpense, editExpense } from "../api";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -153,26 +140,11 @@ function Dashboard() {
                 >
                   Edit
                 </button>
-                <button
-                  style={{
-                    marginLeft: "5px",
-                    color: "#fff",
-                    background: "#dc3545",
-                    border: "none",
-                    borderRadius: "3px",
-                    padding: "2px 8px",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => handleDelete(e.id)}
-                >
-                  Delete
-                </button>
               </>
             )}
           </li>
         ))}
       </ul>
-
     </div>
   );
 }
