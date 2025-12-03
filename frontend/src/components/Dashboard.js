@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ExpenseForm from "./ExpenseForm";
 import ExpenseCharts from "./ExpenseCharts";
-import { fetchExpenses, addExpense, editExpense } from "../api";
+import { fetchExpenses, addExpense, editExpense, deleteExpense } from "../api";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -33,6 +33,13 @@ function Dashboard() {
       description: expense.description,
       category: expense.category,
     });
+  };
+  const handleDelete = (id) => {
+    if (window.confirm("Are you sure you want to delete this expense?")) {
+      deleteExpense(id)
+        .then(() => setExpenses((prev) => prev.filter((exp) => exp.id !== id)))
+        .catch(console.error);
+    }
   };
 
   const handleEditChange = (e) => {
@@ -139,6 +146,20 @@ function Dashboard() {
                   onClick={() => startEdit(e)}
                 >
                   Edit
+                </button>
+                <button
+                  style={{
+                    marginLeft: "5px",
+                    color: "#fff",
+                    background: "#dc3545",
+                    border: "none",
+                    borderRadius: "3px",
+                    padding: "2px 8px",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => handleDelete(e.id)}
+                >
+                  Delete
                 </button>
               </>
             )}
