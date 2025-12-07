@@ -1,3 +1,49 @@
+/* Monthly Summary Table Styles */
+.monthly-summary-block {
+  margin: 2rem 0 0 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  max-width: 700px;
+}
+
+.monthly-summary-block h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.monthly-summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.monthly-summary-table th,
+.monthly-summary-table td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.monthly-summary-table th {
+  background: #f5f6fa;
+  color: #333;
+  font-weight: 600;
+}
+
+.monthly-summary-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.monthly-summary-table tr:hover {
+  background: #e6e6fa;
+}
+
+.monthly-summary-table td {
+  color: #444;
+}
 .stats-container {
   display: flex;
   gap: 1.5rem;
