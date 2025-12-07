@@ -1,3 +1,23 @@
+/**
+ * Calculate category statistics: total and percent of budget per category.
+ * @param {Array} expenses - Array of expense objects
+ * @returns {Array} Array of { category, total, percent }
+ */
+export function getCategoryStatistics(expenses) {
+  const categoryTotals = {};
+  let grandTotal = 0;
+  expenses.forEach((e) => {
+    categoryTotals[e.category] = (categoryTotals[e.category] || 0) + e.amount;
+    grandTotal += e.amount;
+  });
+  return Object.entries(categoryTotals)
+    .map(([category, total]) => ({
+      category,
+      total: total.toFixed(2),
+      percent: grandTotal ? ((total / grandTotal) * 100).toFixed(1) : "0.0",
+    }))
+    .sort((a, b) => b.total - a.total); // Descending by total
+}
 // Utility functions for finance dashboard
 
 /**

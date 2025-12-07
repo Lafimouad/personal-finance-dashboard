@@ -1,3 +1,49 @@
+/* Category Statistics Table Styles */
+.category-stats-block {
+  margin: 2rem 0 0 0;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  max-width: 700px;
+}
+
+.category-stats-block h3 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.category-stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.category-stats-table th,
+.category-stats-table td {
+  padding: 0.75rem 1rem;
+  text-align: center;
+}
+
+.category-stats-table th {
+  background: #f5f6fa;
+  color: #333;
+  font-weight: 600;
+}
+
+.category-stats-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.category-stats-table tr:hover {
+  background: #e6e6fa;
+}
+
+.category-stats-table td {
+  color: #444;
+}
 /* Monthly Summary Table Styles */
 .monthly-summary-block {
   margin: 2rem 0 0 0;

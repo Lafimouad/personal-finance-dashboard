@@ -12,7 +12,7 @@ import {
   PointElement,
 } from "chart.js";
 import "./ExpenseCharts.css";
-import { getMonthlySummary } from "../common/utils";
+import { getMonthlySummary, getCategoryStatistics } from "../common/utils";
 Chart.register(
   ArcElement,
   Tooltip,
@@ -138,6 +138,7 @@ function ExpenseCharts({ expenses }) {
   }
 
   const monthlySummary = getMonthlySummary(expenses);
+  const categoryStats = getCategoryStatistics(expenses);
 
   return (
     <div>
@@ -193,6 +194,27 @@ function ExpenseCharts({ expenses }) {
                     ? "-"
                     : `${row.change > 0 ? "+" : ""}${row.change}%`}
                 </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="category-stats-block">
+        <h3>Category Statistics</h3>
+        <table className="category-stats-table">
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>Total</th>
+              <th>% of Budget</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categoryStats.map((row) => (
+              <tr key={row.category}>
+                <td>{row.category}</td>
+                <td>${row.total}</td>
+                <td>{row.percent}%</td>
               </tr>
             ))}
           </tbody>
