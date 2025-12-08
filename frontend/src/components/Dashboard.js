@@ -96,10 +96,25 @@ function Dashboard() {
       </div>
       <h2>Add Expense</h2>
       <ExpenseForm onAdd={handleAddExpense} />
+      <button
+        style={{
+          margin: "20px 0",
+          padding: "10px 20px",
+          background: "#36A2EB",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          fontWeight: "600",
+        }}
+        onClick={() => navigate("/filter")}
+      >
+        Go to Filter Page
+      </button>
       <ExpenseCharts expenses={expenses} />
       <h2>Expenses</h2>
       <ul>
-        {expenses.map((e) => (
+        {filteredExpenses.map((e) => (
           <li key={e.id}>
             {editingId === e.id ? (
               <form onSubmit={handleEditSubmit} style={{ display: "inline" }}>

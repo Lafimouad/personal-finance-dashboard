@@ -9,6 +9,7 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import ExpenseFilterPage from "./components/ExpenseFilterPage";
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -36,6 +37,14 @@ function App() {
                   <h1>Personal Finance Dashboard</h1>
                   <Dashboard />
                 </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/filter"
+            element={
+              <ProtectedRoute>
+                <ExpenseFilterPage />
               </ProtectedRoute>
             }
           />
