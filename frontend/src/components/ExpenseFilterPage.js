@@ -10,6 +10,7 @@ function ExpenseFilterPage() {
     category: "",
     minAmount: "",
     maxAmount: "",
+    search: "",
   });
 
   useEffect(() => {
@@ -28,6 +29,16 @@ function ExpenseFilterPage() {
     if (filter.category && e.category !== filter.category) pass = false;
     if (minAmount !== null && e.amount < minAmount) pass = false;
     if (maxAmount !== null && e.amount > maxAmount) pass = false;
+    if (
+      filter.search &&
+      !(
+        (e.description &&
+          e.description.toLowerCase().includes(filter.search.toLowerCase())) ||
+        (e.category &&
+          e.category.toLowerCase().includes(filter.search.toLowerCase()))
+      )
+    )
+      pass = false;
     return pass;
   });
 
@@ -44,6 +55,21 @@ function ExpenseFilterPage() {
           marginBottom: "2rem",
         }}
       >
+        <div>
+          <label>
+            Search
+            <br />
+            <input
+              type="text"
+              placeholder="Description or Category"
+              value={filter.search}
+              onChange={(e) =>
+                setFilter((f) => ({ ...f, search: e.target.value }))
+              }
+              style={{ minWidth: "180px" }}
+            />
+          </label>
+        </div>
         <div>
           <label>
             Start Date
