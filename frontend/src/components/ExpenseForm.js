@@ -16,17 +16,24 @@ function ExpenseForm({ onAdd }) {
   const [category, setCategory] = useState(presetCategories[0]);
   const [customCategory, setCustomCategory] = useState("");
   const [useCustom, setUseCustom] = useState(false);
+  const [recurring, setRecurring] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const finalCategory =
       useCustom && customCategory ? customCategory : category;
-    onAdd({ amount: parseFloat(amount), description, category: finalCategory });
+    onAdd({
+      amount: parseFloat(amount),
+      description,
+      category: finalCategory,
+      recurring,
+    });
     setAmount("");
     setDescription("");
     setCategory(presetCategories[0]);
     setCustomCategory("");
     setUseCustom(false);
+    setRecurring(false);
   };
 
   return (
@@ -70,6 +77,14 @@ function ExpenseForm({ onAdd }) {
           required
         />
       )}
+      <label style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <input
+          type="checkbox"
+          checked={recurring}
+          onChange={(e) => setRecurring(e.target.checked)}
+        />
+        Recurring Monthly
+      </label>
       <button type="submit">Add Expense</button>
     </form>
   );

@@ -12,6 +12,8 @@ public class Expense {
     private double amount;
     private String description;
 
+    private boolean recurring = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @JsonIgnore
@@ -26,6 +28,8 @@ public class Expense {
     public void setAmount(double amount) { this.amount = amount; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    public boolean isRecurring() { return recurring; }
+    public void setRecurring(boolean recurring) { this.recurring = recurring; }
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
 }
