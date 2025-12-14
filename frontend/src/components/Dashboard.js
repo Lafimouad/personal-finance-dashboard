@@ -114,7 +114,7 @@ function Dashboard() {
       <ExpenseCharts expenses={expenses} />
       <h2>Expenses</h2>
       <ul>
-        {filteredExpenses.map((e) => (
+        {expenses.map((e) => (
           <li key={e.id}>
             {editingId === e.id ? (
               <form onSubmit={handleEditSubmit} style={{ display: "inline" }}>

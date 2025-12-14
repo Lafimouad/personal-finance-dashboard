@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Pie, Bar, Line } from "react-chartjs-2";
 import {
   Chart,
@@ -25,6 +25,22 @@ Chart.register(
   LineElement,
   PointElement
 );
+
+// Utility to get statistics for expenses
+function getStatistics(expenses) {
+  if (expenses.length === 0) {
+    return { total: 0, average: 0, highest: 0, count: 0 };
+  }
+  const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const average = total / expenses.length;
+  const highest = Math.max(...expenses.map((e) => e.amount));
+  return {
+    total: total.toFixed(2),
+    average: average.toFixed(2),
+    highest: highest.toFixed(2),
+    count: expenses.length,
+  };
+}
 
 function getCategoryData(expenses) {
   const categoryTotals = {};
@@ -112,38 +128,34 @@ function getTrendData(expenses) {
 function ExpenseCharts({ expenses }) {
   const stats = getStatistics(expenses);
   const [budgets, setBudgets] = useState([]); // [{id, category, amount, month}]
-  const [month, setMonth] = useState(() => {
+  const [month] = useState(() => {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
   });
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
     fetchBudgets()
       .then((data) => {
         setBudgets(data);
-        setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(console.error);
   }, []);
 
   // Refresh budgets when month changes or after BudgetSettings change
   const refreshBudgets = () => {
-    setLoading(true);
     fetchBudgets()
       .then((data) => {
         setBudgets(data);
-        setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(console.error);
   };
 
   if (expenses.length === 0) {
     return (
       <div className="charts-container">
         <p style={{ textAlign: "center", color: "#666" }}>
-          No expenses to display. Add some expenses to see charts and statistics.
+          No expenses to display. Add some expenses to see charts and
+          statistics.
         </p>
       </div>
     );
@@ -155,7 +167,9 @@ function ExpenseCharts({ expenses }) {
 
   // Calculate progress for each category
   const getProgress = (category, total) => {
-    const budget = budgets.find((b) => b.category === category && b.month === month);
+    const budget = budgets.find(
+      (b) => b.category === category && b.month === month
+    );
     if (!budget || !budget.amount || budget.amount === 0) return null;
     return Math.min(100, ((total / budget.amount) * 100).toFixed(1));
   };
@@ -236,7 +250,9 @@ function ExpenseCharts({ expenses }) {
           </thead>
           <tbody>
             {categoryStats.map((row) => {
-              const budget = budgets.find((b) => b.category === row.category && b.month === month);
+              const budget = budgets.find(
+                (b) => b.category === row.category && b.month === month
+              );
               const progress = getProgress(row.category, parseFloat(row.total));
               return (
                 <tr key={row.category}>
@@ -249,35 +265,20 @@ function ExpenseCharts({ expenses }) {
                   </td>
                   <td style={{ minWidth: 120 }}>
                     {budget && budget.amount > 0 ? (
-                      <div style={{ width: 100, background: "#eee", borderRadius: 6, overflow: "hidden" }}>
+                      <div
+                        style={{
+                          width: 100,
+                          background: "#eee",
+                          borderRadius: 6,
+                          overflow: "hidden",
+                        }}
+                      >
                         <div
                           style={{
                             width: `${progress}%`,
-                            background: progress < 90 ? "#36A2EB" : progress < 100 ? "#FFCE56" : "#dc3545",
-                            color: "#fff",
-                            padding: "2px 0",
-                            textAlign: "center",
-                            fontSize: 12,
-                            borderRadius: 6,
-                            transition: "width 0.5s",
-                          }}
-                        >
-                          {progress}%
-                        </div>
-                      </div>
-                    ) : (
-                      <span style={{ color: "#aaa" }}>No budget</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+                            background:
+                              progress < 90
+                                ? "#36A2EB"
                                 : progress < 100
                                 ? "#FFCE56"
                                 : "#dc3545",
