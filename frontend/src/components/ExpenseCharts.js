@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Pie, Bar, Line } from "react-chartjs-2";
 import {
   Chart,
@@ -13,6 +13,8 @@ import {
 } from "chart.js";
 import "./ExpenseCharts.css";
 import { getMonthlySummary, getCategoryStatistics } from "../common/utils";
+import { getAllBudgets, getBudget } from "../common/budgets";
+import BudgetSettings from "./BudgetSettings";
 Chart.register(
   ArcElement,
   Tooltip,
@@ -125,6 +127,7 @@ function getStatistics(expenses) {
 
 function ExpenseCharts({ expenses }) {
   const stats = getStatistics(expenses);
+  const [budgets, setBudgetsState] = useState(getAllBudgets());
 
   if (expenses.length === 0) {
     return (
@@ -139,9 +142,26 @@ function ExpenseCharts({ expenses }) {
 
   const monthlySummary = getMonthlySummary(expenses);
   const categoryStats = getCategoryStatistics(expenses);
+  const categories = Array.from(new Set(expenses.map((e) => e.category)));
+
+  // Calculate progress for each category
+  const getProgress = (category, total) => {
+    const budget = getBudget(category);
+    if (!budget || budget === 0) return null;
+    return Math.min(100, ((total / budget) * 100).toFixed(1));
+  };
+
+  // Update budgets when changed in BudgetSettings
+  const handleBudgetsChange = (newBudgets) => {
+    setBudgetsState({ ...newBudgets });
+  };
 
   return (
     <div>
+      <BudgetSettings
+        categories={categories}
+        onBudgetsChange={handleBudgetsChange}
+      />
       <div className="stats-container">
         <div className="stat-card">
           <h4>Total Expenses</h4>
@@ -200,23 +220,66 @@ function ExpenseCharts({ expenses }) {
         </table>
       </div>
       <div className="category-stats-block">
-        <h3>Category Statistics</h3>
+        <h3>Category Statistics & Budget Progress</h3>
         <table className="category-stats-table">
           <thead>
             <tr>
               <th>Category</th>
               <th>Total</th>
               <th>% of Budget</th>
+              <th>Budget Progress</th>
             </tr>
           </thead>
           <tbody>
-            {categoryStats.map((row) => (
-              <tr key={row.category}>
-                <td>{row.category}</td>
-                <td>${row.total}</td>
-                <td>{row.percent}%</td>
-              </tr>
-            ))}
+            {categoryStats.map((row) => {
+              const progress = getProgress(row.category, parseFloat(row.total));
+              const budget = getBudget(row.category);
+              return (
+                <tr key={row.category}>
+                  <td>{row.category}</td>
+                  <td>${row.total}</td>
+                  <td>
+                    {budget && budget > 0
+                      ? ((row.total / budget) * 100).toFixed(1) + "%"
+                      : "-"}
+                  </td>
+                  <td style={{ minWidth: 120 }}>
+                    {budget && budget > 0 ? (
+                      <div
+                        style={{
+                          width: 100,
+                          background: "#eee",
+                          borderRadius: 6,
+                          overflow: "hidden",
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${progress}%`,
+                            background:
+                              progress < 90
+                                ? "#36A2EB"
+                                : progress < 100
+                                ? "#FFCE56"
+                                : "#dc3545",
+                            color: "#fff",
+                            padding: "2px 0",
+                            textAlign: "center",
+                            fontSize: 12,
+                            borderRadius: 6,
+                            transition: "width 0.5s",
+                          }}
+                        >
+                          {progress}%
+                        </div>
+                      </div>
+                    ) : (
+                      <span style={{ color: "#aaa" }}>No budget</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
