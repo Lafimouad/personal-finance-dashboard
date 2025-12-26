@@ -42,6 +42,7 @@ public class ExpenseController {
         expense.setAmount(updatedExpense.getAmount());
         expense.setDescription(updatedExpense.getDescription());
         expense.setRecurring(updatedExpense.isRecurring());
+        expense.setDate(updatedExpense.getDate());
         return repository.save(expense);
     }
 
